@@ -1,6 +1,10 @@
+# ------------------
+# Mines -
+# by PixelZerg
+# ------------------
+
 from random import *
 
-# Mines - PixelZerg
 # constants
 W_WIDTH = 21
 W_HEIGHT = 7
@@ -204,7 +208,21 @@ def main():
         if k == K_RIGHT:
             curx+=1
         if k == K_FLAG:
-            flagfield[cury][curx] = not flagfield[cury][curx]
+            if 0 <= cury < len(flagfield) and 0 <= curx < len(flagfield[0]):
+                flagfield[cury][curx] = not flagfield[cury][curx]
+            if has_won(flagfield, minefield):
+                # game won
+
+                # reveal full
+                userfield = reveal(aroundfield, minefield)
+                viewport(userfield, initarr(width, height), viewx, viewy, None, None)
+                input("Press EXE")
+
+                # game over screen
+                print("       You Win!      ")
+                print("-" * W_WIDTH)
+                print("Steps: " + str(steps))
+                break
         if k == K_SEL:
             if minefield[cury][curx]:
                 # game over
@@ -218,25 +236,9 @@ def main():
                 print("      Game Over!     ")
                 print("-" * W_WIDTH)
                 print("Steps: "+str(steps))
-                print()
                 break
             else:
-                if not has_won(flagfield, minefield):
-                    userfield = select(userfield, aroundfield, curx, cury)
-                else:
-                    # game won
-
-                    # reveal full
-                    userfield = reveal(aroundfield, minefield)
-                    viewport(userfield, initarr(width, height), viewx, viewy, None, None)
-                    input("Press EXE")
-
-                    # game over screen
-                    print("       You Win!      ")
-                    print("-" * W_WIDTH)
-                    print("Steps: " + str(steps))
-                    print()
-                    break
+                userfield = select(userfield, aroundfield, curx, cury)
 
         # viewport adjustment
         if curx - viewx < 5:
